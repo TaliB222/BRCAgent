@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medical AI Assistant</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    
+</head>
+<body>
+
+<h2>Medical AI Assistant</h2>
+
+<form id="form">
+    <input name="age" placeholder="Age"><br>
+    <input name="cancer_type" placeholder="Cancer type"><br>
+    <input name="brca" placeholder="BRCA status (yes/no)"><br>
+    <input name="stage" placeholder="Disease stage"><br>
+    <textarea name="text" placeholder="Write your question"></textarea><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<pre id="output"></pre>
+
+<script>
+document.getElementById("form").onsubmit = async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+
+    const data = {
+        age: form.age.value,
+        cancer_type: form.cancer_type.value,
+        brca: form.brca.value,
+        stage: form.stage.value,
+        text: form.text.value
+    };
+
+    const res = await fetch("/analyze", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    document.getElementById("output").innerText = result.response;
+};
+</script>
+
+</body>
+</html>
