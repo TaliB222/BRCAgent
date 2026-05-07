@@ -1,21 +1,35 @@
-from classifier.classify import classify_text
-from decision.rules import should_respond
-from rag.retrieve import retrieve_context
-from generator.generate import generate_response
+from app.classifier.classify import classify_text
+from app.decision.rules import should_respond
+from app.rag.retrieve import retrieve_context
+from app.generator.generate import generate_response
 
 
 def run_agent(text):
     classification = classify_text(text)
 
+    print("\n[CLASSIFIER]")
+    print(classification)
+
     if not should_respond(classification):
-        return "No response"
+        return "No response (filtered by decision layer)"
 
     context = retrieve_context(text)
-    response = generate_response(text, context)
+
+    print("\n[CONTEXT]")
+    print(context)
+
+    response = generate_response(text, context, classification)
 
     return response
 
 
 if __name__ == "__main__":
-    sample = "יש למישהי ניסיון עם תופעות לוואי של הקרנות?"
-    print(run_agent(sample))
+    test_input = "יש למישהי ניסיון עם תסמינים של גיל המעבר?"
+
+    print("\n[USER INPUT]")
+    print(test_input)
+
+    result = run_agent(test_input)
+
+    print("\n[FINAL RESPONSE]")
+    print(result)
